@@ -1,7 +1,7 @@
-import { hasher } from "../../util.ts";
 import { Request, Response } from "express";
 
 import UserModel from "../../model/user.model";
+import { apiResponse, hasher } from "../../util.ts";
 import { createToken, setCookie } from "../../services/auth.service";
 
 const registerController = async (req: Request, res: Response) => {
@@ -9,14 +9,22 @@ const registerController = async (req: Request, res: Response) => {
     const { email, password, username } = req.body;
 
     if (!email || !password || !username) {
-      res.status(400).send({ error: "All fields are required" });
+      apiResponse(res, 400, {
+        status: "error",
+        message: "All fields are required",
+      });
+
       return;
     }
 
     const existingUser = await UserModel.findOne({ email });
 
     if (existingUser) {
-      res.status(409).send({ status: "ERROR", message: "User already exists" });
+      apiResponse(res, 409, {
+        status: "error",
+        message: "User already exists",
+      });
+
       return;
     }
 
@@ -44,18 +52,21 @@ const registerController = async (req: Request, res: Response) => {
 
     setCookie(res, "refresh_token", refreshToken, 60 * 60 * 1000);
 
-    res.status(201).send({
+    apiResponse(res, 201, {
+      status: "success",
+      message: "Account created successfully",
       data: {
         accessToken,
         userId: newUser._id.toString(),
       },
     });
+
     return;
   } catch (error) {
     const err = error as Error;
 
-    res.status(500).send({
-      error: err.name,
+    apiResponse(res, 500, {
+      status: "error",
       message: err.message,
     });
 
