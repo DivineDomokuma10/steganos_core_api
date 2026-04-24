@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Build output (Matches the 'outDir' in your tsconfig.json)
+dist/
+build/
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
+
+# Testing (if using Jest or similar)
+coverage/
+
+# IDE / Editor folders
+.vscode/
+.idea/
+.DS_Store
+
+# Optional: Compiled JS files 
+# (Only if you compile .ts files in the same directory as source)
+# *.js
+# *.js.map

@@ -1,0 +1,11 @@
+export interface UserCredentials {
+  email: string;
+  username: string;
+  password: string;
+}
+
+export interface Env {
+  port: number;
+  dbConnectUri: string;
+  jwtSecret: string;
+}
