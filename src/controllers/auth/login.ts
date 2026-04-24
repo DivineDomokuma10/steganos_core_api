@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 
-import { compare } from "../../util.ts";
 import UserModel from "../../model/user.model";
+ss;
+import { apiResponse, compare } from "../../util.ts";
 import { createToken, setCookie } from "../../services/auth.service";
 
 const loginController = async (req: Request, res: Response) => {
@@ -9,18 +10,16 @@ const loginController = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      res.status(400).send({
+      apiResponse(res, 400, {
         status: "error",
-        message: "All fields are required!",
+        message: "All fields are required",
       });
-
-      return;
     }
 
     const user = await UserModel.findOne({ email });
 
     if (!user) {
-      res.status(401).send({
+      apiResponse(res, 401, {
         status: "error",
         message: "Invalid credentials",
       });
@@ -31,7 +30,7 @@ const loginController = async (req: Request, res: Response) => {
     const isPwdCorrect = await compare(password, user.password);
 
     if (!isPwdCorrect) {
-      res.status(401).send({
+      apiResponse(res, 401, {
         status: "error",
         message: "Invalid credentials",
       });
@@ -55,13 +54,15 @@ const loginController = async (req: Request, res: Response) => {
 
     setCookie(res, "refresh_token", refreshToken, 60 * 60 * 1000);
 
-    res.status(200).send({
+    apiResponse(res, 201, {
+      status: "success",
+      message: "Login successfully",
       data: {
         accessToken,
-
         userId: user._id.toString(),
       },
     });
+
     return;
   } catch (error) {
     const err = error as Error;
