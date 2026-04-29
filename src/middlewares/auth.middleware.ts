@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 
 import { config } from "../config";
+import { apiResponse } from "../util.ts";
+import { IJwtPayload } from "../types/interface";
 import { verifyJwt } from "../services/auth.service";
 
 export function authenticateToken(
@@ -11,34 +13,48 @@ export function authenticateToken(
   try {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Unauthorized" });
+    if (!authHeader?.startsWith("Bearer ")) {
+      apiResponse(res, 401, {
+        status: "error",
+        message: "Unauthorized: No token",
+      });
+
+      return;
     }
 
     const token = authHeader.split(" ")[1];
 
-    if (!token) {
-      res.status(401).send({
-        message: "Access Denied, No token provided",
-      });
-    }
+    const decoded = verifyJwt<IJwtPayload>(token, config.accessTokenSecret);
 
-    const decoded = verifyJwt(token, config.accessTokenSecret);
+    req.user = decoded;
 
-    if (typeof decoded === "object") {
-      const { email, username } = decoded;
-
-      req.user = { email, username };
-
-      next();
-    } else {
-      res.status(401).send({
-        message: "Access Denied, Invalid token",
-      });
-    }
+    next();
   } catch (error) {
-    let err = error as Error;
+    const err = error as Error;
 
-    res.status(500).send({ error: err.name, message: err.message });
+    if (err.message === "TOKEN_EXPIRED") {
+      apiResponse(res, 401, {
+        status: "error",
+        message: "Session expired. Please login again.",
+      });
+
+      return;
+    }
+
+    if (err.message === "INVALID_TOKEN") {
+      apiResponse(res, 401, {
+        status: "error",
+        message: "Invalid authentication token",
+      });
+
+      return;
+    }
+
+    apiResponse(res, 500, {
+      status: "error",
+      message: "Internal server error",
+    });
+
+    return;
   }
 }

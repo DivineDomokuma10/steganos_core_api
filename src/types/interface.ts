@@ -1,5 +1,3 @@
-import { JwtPayload } from "jsonwebtoken";
-
 export interface IUser {
   email: string;
   username: string;
@@ -8,4 +6,21 @@ export interface IUser {
 
 export interface ICreateTokenReturns {
   token: string;
+}
+
+export interface IJwtPayload {
+  userId: string;
+  email: string;
+}
+
+export interface IRefreshJwtPayload extends IJwtPayload {
+  jti: string;
+}
+
+export interface IDbRefreshToken {
+  userId: string;
+  tokenId: string;
+  tokenHash: string;
+  revoked: boolean;
+  expiresAt: Date;
 }

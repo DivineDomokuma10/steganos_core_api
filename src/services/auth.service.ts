@@ -1,30 +1,46 @@
 import jwt from "jsonwebtoken";
+import { Response } from "express";
 import type { StringValue } from "ms";
 
 import { config } from "../config";
+import { TTokenType } from "../types/auth";
 
-import { Response } from "express";
-import { TPayLoad, TTokenType } from "../types/auth";
-import { ICreateTokenReturns } from "../types/interface";
+import {
+  IJwtPayload,
+  IRefreshJwtPayload,
+  ICreateTokenReturns,
+} from "../types/interface";
+import RefreshTokenModel from "../model/refresh-token.model";
 
-export function verifyJwt(token: string, secret: string) {
-  return jwt.verify(token, secret);
+export function verifyJwt<T>(token: string, secret: string): T {
+  try {
+    return jwt.verify(token, secret) as T;
+  } catch (err: any) {
+    if (err.name === "TokenExpiredError") {
+      throw new Error("TOKEN_EXPIRED");
+    }
+
+    if (err.name === "JsonWebTokenError") {
+      throw new Error("INVALID_TOKEN");
+    }
+    throw err;
+  }
 }
 
-export function createToken(
-  payload: TPayLoad,
+export function createToken<T extends IJwtPayload>(
+  payload: T,
   type: TTokenType,
 ): ICreateTokenReturns {
-  const token = jwt.sign(
-    payload,
-    type === "access" ? config.accessTokenSecret : config.refreshTokenSecret,
-    {
-      algorithm: "HS256",
-      expiresIn: (type === "access"
-        ? config.accessTokenExpire
-        : config.refreshTokenExpire) as StringValue,
-    },
-  );
+  const secret =
+    type === "access" ? config.accessTokenSecret : config.refreshTokenSecret;
+
+  const expire =
+    type === "access" ? config.accessTokenExpire : config.refreshTokenExpire;
+
+  const token = jwt.sign(payload, secret, {
+    algorithm: "HS256",
+    expiresIn: expire as StringValue,
+  });
 
   return { token };
 }
@@ -40,5 +56,16 @@ export function setCookie(
     maxAge: age,
     secure: config.nodeEnv === "production",
     sameSite: config.nodeEnv === "production" ? "strict" : "none",
+  });
+}
+
+export async function refreshTokenRotator(oldToken: string) {
+  const decoded = verifyJwt<IRefreshJwtPayload>(
+    oldToken,
+    config.refreshTokenSecret,
+  );
+
+  const refreshTokenFromDB = await RefreshTokenModel.findOne({
+    tokenId: decoded.jti,
   });
 }

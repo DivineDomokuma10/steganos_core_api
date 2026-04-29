@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 
 import UserModel from "../../model/user.model";
 import { apiResponse, hasher } from "../../util.ts";
-import { createToken, setCookie } from "../../services/auth.service";
 
 const registerController = async (req: Request, res: Response) => {
   try {
@@ -36,27 +35,10 @@ const registerController = async (req: Request, res: Response) => {
       password: hashedPwd,
     });
 
-    const { token: accessToken } = createToken(
-      {
-        userId: newUser._id.toString(),
-      },
-      "access",
-    );
-
-    const { token: refreshToken } = createToken(
-      {
-        userId: newUser._id.toString(),
-      },
-      "refresh",
-    );
-
-    setCookie(res, "refresh_token", refreshToken, 60 * 60 * 1000);
-
     apiResponse(res, 201, {
       status: "success",
       message: "Account created successfully",
       data: {
-        accessToken,
         userId: newUser._id.toString(),
       },
     });

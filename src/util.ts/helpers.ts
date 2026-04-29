@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { Prettify } from "../types/type";
 
 export function extractor<T, K extends keyof T>(
@@ -15,4 +16,8 @@ export function extractor<T, K extends keyof T>(
   }
 
   return extractObject;
+}
+
+export function uuid() {
+  return randomUUID();
 }
