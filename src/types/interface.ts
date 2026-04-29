@@ -10,7 +10,6 @@ export interface ICreateTokenReturns {
 
 export interface IJwtPayload {
   userId: string;
-  email: string;
 }
 
 export interface IRefreshJwtPayload extends IJwtPayload {

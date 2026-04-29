@@ -1,16 +1,9 @@
 import jwt from "jsonwebtoken";
-import { Response } from "express";
 import type { StringValue } from "ms";
 
-import { config } from "../config";
-import { TTokenType } from "../types/auth";
-
-import {
-  IJwtPayload,
-  IRefreshJwtPayload,
-  ICreateTokenReturns,
-} from "../types/interface";
-import RefreshTokenModel from "../model/refresh-token.model";
+import { config } from "../../config";
+import { TTokenType } from "../../types/auth";
+import { ICreateTokenReturns, IJwtPayload } from "../../types/interface";
 
 export function verifyJwt<T>(token: string, secret: string): T {
   try {
@@ -43,29 +36,4 @@ export function createToken<T extends IJwtPayload>(
   });
 
   return { token };
-}
-
-export function setCookie(
-  res: Response,
-  name: string,
-  value: string,
-  age: number,
-) {
-  res.cookie(name, value, {
-    httpOnly: true,
-    maxAge: age,
-    secure: config.nodeEnv === "production",
-    sameSite: config.nodeEnv === "production" ? "strict" : "none",
-  });
-}
-
-export async function refreshTokenRotator(oldToken: string) {
-  const decoded = verifyJwt<IRefreshJwtPayload>(
-    oldToken,
-    config.refreshTokenSecret,
-  );
-
-  const refreshTokenFromDB = await RefreshTokenModel.findOne({
-    tokenId: decoded.jti,
-  });
 }

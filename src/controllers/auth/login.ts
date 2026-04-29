@@ -1,11 +1,16 @@
 import { Request, Response } from "express";
 
-import { uuid } from "../../util.ts/helpers";
+import { setCookie } from "../../services/auth/cookie";
+import { createToken } from "../../services/auth/verify-create-jwt";
+
 import UserModel from "../../model/user.model";
-import { apiResponse, compare, hasher } from "../../util.ts";
-import { IRefreshJwtPayload } from "../../types/interface";
-import { createToken, setCookie } from "../../services/auth.service";
 import RefreshTokenModel from "../../model/refresh-token.model";
+
+import { IRefreshJwtPayload } from "../../types/interface";
+
+import { uuid } from "../../util.ts/helpers";
+import { REFRESH_TOKEN_TTL } from "../../util.ts/constants";
+import { apiResponse, compare, hasher } from "../../util.ts";
 
 const loginController = async (req: Request, res: Response) => {
   try {
@@ -42,7 +47,6 @@ const loginController = async (req: Request, res: Response) => {
 
     const { token: accessToken } = createToken(
       {
-        email: user.email,
         userId: user._id.toString(),
       },
       "access",
@@ -52,21 +56,22 @@ const loginController = async (req: Request, res: Response) => {
 
     const { token: refreshToken } = createToken<IRefreshJwtPayload>(
       {
-        email: user.email,
         jti: refreshTokenId,
         userId: user._id.toString(),
       },
       "refresh",
     );
 
-    setCookie(res, "refreshToken", refreshToken, 1 * 60 * 60 * 1000);
+    setCookie(res, "refreshToken", refreshToken, REFRESH_TOKEN_TTL);
+
+    const hashedRefreshToken = await hasher(refreshToken);
 
     await RefreshTokenModel.create({
       revoked: false,
       tokenId: refreshTokenId,
       userId: user._id.toString(),
-      tokenHash: hasher(refreshToken),
-      expiresAt: new Date(Date.now() + 1 * 60 * 60 * 1000),
+      tokenHash: hashedRefreshToken,
+      expiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL),
     });
 
     apiResponse(res, 201, {

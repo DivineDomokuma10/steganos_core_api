@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 
-import { config } from "../../config";
 import { apiResponse } from "../../util.ts";
-import { verifyJwt } from "../../services/auth.service";
-import { IRefreshJwtPayload } from "../../types/interface";
+import { REFRESH_TOKEN_TTL } from "../../util.ts/constants";
 
-export const refreshController = async (req: Request, res: Response) => {
+import { setCookie } from "../../services/auth/cookie";
+import { refreshTokenRotator } from "../../services/auth/refreshTokenRotator";
+
+const refreshController = async (req: Request, res: Response) => {
   try {
     const incomingToken = req.cookies.refreshToken;
 
@@ -14,14 +15,20 @@ export const refreshController = async (req: Request, res: Response) => {
         status: "error",
         message: "No token",
       });
-
-      return;
     }
 
-    const decodedIncomingToken = verifyJwt<IRefreshJwtPayload>(
-      incomingToken,
-      config.refreshTokenSecret,
-    );
+    const { accessToken, refreshToken } =
+      await refreshTokenRotator(incomingToken);
+
+    setCookie(res, "refreshToken", refreshToken, REFRESH_TOKEN_TTL);
+
+    apiResponse(res, 200, {
+      status: "success",
+      data: { accessToken },
+      message: "Refresh successful",
+    });
+
+    return;
   } catch (error) {
     const err = error as Error;
 
@@ -34,11 +41,31 @@ export const refreshController = async (req: Request, res: Response) => {
       return;
     }
 
-    apiResponse(res, 401, {
+    if (err.message === "TOKEN_EXPIRED") {
+      apiResponse(res, 401, {
+        status: "error",
+        message: "Session expired. Please login again.",
+      });
+
+      return;
+    }
+
+    if (err.message === "INVALID_TOKEN") {
+      apiResponse(res, 401, {
+        status: "error",
+        message: "Invalid authentication token",
+      });
+
+      return;
+    }
+
+    apiResponse(res, 500, {
       status: "error",
-      message: "Invalid or expired token",
+      message: "Internal server error",
     });
 
     return;
   }
 };
+
+export default refreshController;

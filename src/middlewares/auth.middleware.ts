@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { config } from "../config";
 import { apiResponse } from "../util.ts";
 import { IJwtPayload } from "../types/interface";
-import { verifyJwt } from "../services/auth.service";
+import { verifyJwt } from "../services/auth/verify-create-jwt";
 
 export function authenticateToken(
   req: Request,

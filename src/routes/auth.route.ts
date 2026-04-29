@@ -1,7 +1,7 @@
 import { Router } from "express";
 import loginController from "../controllers/auth/login";
+import refreshController from "../controllers/auth/refresh";
 import registerController from "../controllers/auth/register";
-import { refreshController } from "../controllers/auth/refresh";
 
 const router = Router();
 
