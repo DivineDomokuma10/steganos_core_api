@@ -14,6 +14,10 @@ import { apiResponse, compare, hasher } from "../../util.ts";
 
 const loginController = async (req: Request, res: Response) => {
   try {
+    console.log(`Endpoint: ${req.path}`);
+    console.log(`Payload: ${JSON.stringify(req.body)}`);
+    console.log(`Host: ${req.headers.host}`);
+
     const { email, password } = req.body;
 
     if (!email || !password) {

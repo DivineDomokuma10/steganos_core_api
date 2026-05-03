@@ -5,6 +5,10 @@ import { apiResponse, hasher } from "../../util.ts";
 
 const registerController = async (req: Request, res: Response) => {
   try {
+    console.log(`Endpoint: ${req.path}`);
+    console.log(`Payload: ${req.body}`);
+    console.log(`Origin: ${req.headers.origin}`);
+
     const { email, password, username } = req.body;
 
     if (!email || !password || !username) {

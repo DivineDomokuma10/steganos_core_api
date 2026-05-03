@@ -7,6 +7,9 @@ import { setCookie } from "../../services/auth/cookie";
 import { refreshTokenRotator } from "../../services/auth/refreshTokenRotator";
 
 const refreshController = async (req: Request, res: Response) => {
+  console.log(`Endpoint: ${req.path}`);
+  console.log(`Host: ${req.host}`);
+
   try {
     const incomingToken = req.cookies.refreshToken;
 
@@ -15,6 +18,8 @@ const refreshController = async (req: Request, res: Response) => {
         status: "error",
         message: "No token",
       });
+
+      return;
     }
 
     const { accessToken, refreshToken } =
