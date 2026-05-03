@@ -9,9 +9,9 @@ const registerController = async (req: Request, res: Response) => {
     console.log(`Payload: ${req.body}`);
     console.log(`Origin: ${req.headers.origin}`);
 
-    const { email, password, username } = req.body;
+    const { email, password, username, termsAndCondition } = req.body;
 
-    if (!email || !password || !username) {
+    if (!email || !password || !username || !termsAndCondition) {
       apiResponse(res, 400, {
         status: "error",
         message: "All fields are required",
@@ -36,6 +36,7 @@ const registerController = async (req: Request, res: Response) => {
     const newUser = await UserModel.create({
       email,
       username,
+      termsAndCondition,
       password: hashedPwd,
     });
 
