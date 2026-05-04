@@ -16,7 +16,7 @@ const loginController = async (req: Request, res: Response) => {
   try {
     console.log(`Endpoint: ${req.path}`);
     console.log(`Payload: ${JSON.stringify(req.body)}`);
-    console.log(`Host: ${req.headers.host}`);
+    console.log(`Client: ${req.headers.origin}`);
 
     const { email, password } = req.body;
 
@@ -32,7 +32,7 @@ const loginController = async (req: Request, res: Response) => {
     if (!user) {
       apiResponse(res, 401, {
         status: "error",
-        message: "Invalid credentials",
+        message: "Invalid Credentials",
       });
 
       return;
@@ -43,7 +43,7 @@ const loginController = async (req: Request, res: Response) => {
     if (!isPwdCorrect) {
       apiResponse(res, 401, {
         status: "error",
-        message: "Invalid credentials",
+        message: "Invalid Credentials",
       });
 
       return;
@@ -80,7 +80,7 @@ const loginController = async (req: Request, res: Response) => {
 
     apiResponse(res, 201, {
       status: "success",
-      message: "Login successfully",
+      message: "Login Successful",
       data: {
         accessToken,
         userId: user._id.toString(),
