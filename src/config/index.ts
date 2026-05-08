@@ -6,10 +6,10 @@ import { ALLOWED_ORIGINS } from "../util.ts/constants";
 dotenv.config();
 
 export const config = {
-  port: process.env.PORT!,
   nodeEnv: process.env.NODE_ENV!,
   mongoUri: process.env.MONGO_URI!,
   saltRound: process.env.SALTROUNDS!,
+  port: process.env.PORT! as unknown as number,
   accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET!,
   accessTokenExpire: process.env.ACCESS_TOKEN_EXPIRE_TIME!,

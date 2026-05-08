@@ -14,12 +14,10 @@ export function authenticateToken(
     const authHeader = req.headers.authorization;
 
     if (!authHeader?.startsWith("Bearer ")) {
-      apiResponse(res, 401, {
+      return apiResponse(res, 401, {
         status: "error",
-        message: "Unauthorized: No token",
+        message: "NO_ACCESS_TOKEN",
       });
-
-      return;
     }
 
     const token = authHeader.split(" ")[1];
@@ -28,33 +26,27 @@ export function authenticateToken(
 
     req.user = decoded;
 
-    next();
+    return next();
   } catch (error) {
     const err = error as Error;
 
     if (err.message === "TOKEN_EXPIRED") {
-      apiResponse(res, 401, {
+      return apiResponse(res, 401, {
         status: "error",
-        message: "Session expired. Please login again.",
+        message: "ACCESS_TOKEN_EXPIRED",
       });
-
-      return;
     }
 
     if (err.message === "INVALID_TOKEN") {
-      apiResponse(res, 401, {
+      return apiResponse(res, 401, {
         status: "error",
-        message: "Invalid authentication token",
+        message: "INVALID_ACCESS_TOKEN",
       });
-
-      return;
     }
 
-    apiResponse(res, 500, {
+    return apiResponse(res, 500, {
       status: "error",
-      message: "Internal server error",
+      message: "AUTH_MIDDLEWARE_ERROR",
     });
-
-    return;
   }
 }

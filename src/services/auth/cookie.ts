@@ -1,5 +1,4 @@
 import { Response } from "express";
-
 import { config } from "../../config";
 
 export function setCookie(
@@ -8,10 +7,24 @@ export function setCookie(
   value: string,
   age: number,
 ) {
+  const isProd = config.nodeEnv === "production";
+
   res.cookie(name, value, {
     httpOnly: true,
     maxAge: age,
-    secure: config.nodeEnv === "production",
-    sameSite: config.nodeEnv === "production" ? "strict" : "none",
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
+    path: "/",
+  });
+}
+
+export function clearCookie(res: Response, name: string) {
+  const isProd = config.nodeEnv === "production";
+
+  res.clearCookie(name, {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
+    path: "/",
   });
 }

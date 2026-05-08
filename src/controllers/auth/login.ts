@@ -82,7 +82,9 @@ const loginController = async (req: Request, res: Response) => {
       status: "success",
       message: "Login Successful",
       data: {
+        email,
         accessToken,
+        username: user.username,
         userId: user._id.toString(),
       },
     });

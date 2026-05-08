@@ -7,5 +7,5 @@ import { authenticateToken } from "./middlewares/auth.middleware";
 export default (app: Express): void => {
   app.use("/api/auth", authRoute);
   app.use(authenticateToken);
-  app.use("/api/user", userRoute);
+  app.use("/api/users", userRoute);
 };

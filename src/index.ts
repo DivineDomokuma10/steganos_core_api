@@ -16,5 +16,5 @@ connectDB();
 
 app.listen(config.port, () => {
   router(app);
-  console.log(`Server running at http://0.0.0.0:${config.port}`);
+  console.log(`Server running at http://localhost:${config.port}`);
 });

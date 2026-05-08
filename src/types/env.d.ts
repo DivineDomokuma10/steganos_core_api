@@ -1,6 +1,6 @@
 declare namespace NodeJS {
   interface ProcessEvn {
-    PORT: string;
+    PORT: number;
     MONGO_URI: string;
     SALTROUNDS: number;
     ACCESS_TOKEN_SECRET: string;

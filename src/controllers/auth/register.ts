@@ -44,6 +44,8 @@ const registerController = async (req: Request, res: Response) => {
       status: "success",
       message: "Account created successfully",
       data: {
+        email,
+        username,
         userId: newUser._id.toString(),
       },
     });

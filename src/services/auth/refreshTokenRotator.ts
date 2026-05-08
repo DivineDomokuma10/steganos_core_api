@@ -15,38 +15,41 @@ export async function refreshTokenRotator(oldToken: string) {
 
   const { userId, jti } = decoded;
 
-  const tokenDoc = await RefreshTokenModel.findOne({
-    tokenId: jti,
-  });
+  const tokenDoc = await RefreshTokenModel.findOne({ tokenId: jti });
 
-  if (!tokenDoc || tokenDoc.revoked) {
-    await RefreshTokenModel.updateMany({ userId }, { revoked: true });
-    throw new Error("TOKEN_REUSE_DETECTED");
+  if (!tokenDoc) {
+    throw new Error("TOKEN_NOT_FOUND");
   }
 
   if (tokenDoc.expiresAt < new Date()) {
-    await RefreshTokenModel.updateMany({ userId }, { revoked: true });
     throw new Error("TOKEN_EXPIRED");
   }
 
   const isValid = await compare(oldToken, tokenDoc.tokenHash);
 
   if (!isValid) {
+    // strong signal of compromise
     await RefreshTokenModel.updateMany({ userId }, { revoked: true });
     throw new Error("TOKEN_TAMPERED");
   }
 
-  await RefreshTokenModel.updateOne({ tokenId: jti }, { revoked: true });
+  // atomic revoke
+  const updated = await RefreshTokenModel.findOneAndUpdate(
+    { tokenId: jti, revoked: false },
+    { revoked: true },
+    { new: true },
+  );
+
+  if (!updated) {
+    throw new Error("TOKEN_ALREADY_USED");
+  }
 
   const newTokenId = uuid();
 
   const { token: accessToken } = createToken({ userId }, "access");
 
   const { token: refreshToken } = createToken<IRefreshJwtPayload>(
-    {
-      userId,
-      jti: newTokenId,
-    },
+    { userId, jti: newTokenId },
     "refresh",
   );
 
@@ -60,5 +63,5 @@ export async function refreshTokenRotator(oldToken: string) {
     expiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL),
   });
 
-  return { accessToken, refreshToken };
+  return { accessToken, refreshToken, userId };
 }
