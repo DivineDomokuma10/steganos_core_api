@@ -1,0 +1,11 @@
+import { Router } from "express";
+
+import encodeController from "../controllers/steg/encode";
+import decodeController from "../controllers/steg/decode";
+
+const router = Router();
+
+router.post("/encode", encodeController);
+router.get("/decode", decodeController);
+
+export default router;

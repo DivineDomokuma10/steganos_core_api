@@ -4,9 +4,11 @@ import { apiResponse } from "../util.ts";
 import { extractor } from "../util.ts/helpers";
 
 export const getProfile = async (req: Request, res: Response) => {
+  console.log("---------------------");
   console.log(`Endpoint: ${req.path}`);
   console.log(`Client: ${req.headers.origin}`);
-  console.log(`Auth Cookie: ${req.cookies.refreshToken}`);
+  console.log("---------------------");
+
   try {
     const me = req.user;
 

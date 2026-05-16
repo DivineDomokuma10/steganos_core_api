@@ -8,6 +8,12 @@ import { setCookie } from "../../services/auth/cookie";
 import { refreshTokenRotator } from "../../services/auth/refreshTokenRotator";
 
 const refreshController = async (req: Request, res: Response) => {
+  console.log("---------------------");
+  console.log(`Endpoint: ${req.path}`);
+  console.log(`Client: ${req.headers.origin}`);
+  console.log("refresh token", req.cookies.refreshToken);
+  console.log("---------------------");
+
   try {
     const incomingToken = req.cookies.refreshToken;
 
@@ -24,7 +30,7 @@ const refreshController = async (req: Request, res: Response) => {
 
     setCookie(res, "refreshToken", refreshToken, REFRESH_TOKEN_TTL);
 
-    const user = await UserModel.findById({ userId });
+    const user = await UserModel.findById(userId);
 
     if (!user) {
       apiResponse(res, 404, {

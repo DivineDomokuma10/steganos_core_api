@@ -78,3 +78,17 @@ export function timeConversion(s: string): string {
 
   return millitryTimeFormat;
 }
+
+export function to8bitBinary(num: number): number[] {
+  const bits = [];
+
+  for (let i = 7; i >= 0; i--) {
+    bits.push((num >> i) & 1);
+  }
+
+  return bits;
+}
+
+export function toBase10(bits: number[]) {
+  return bits.reduce((acc, bit) => (acc << 1) | bit, 0);
+}
