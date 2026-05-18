@@ -1,4 +1,4 @@
-export const MAX_SIZE = 10;
+export const IMAGE_MAX_SIZE = 10;
 
 export const ALLOWED_ORIGINS = [
   "http://localhost:3000",

@@ -3,7 +3,6 @@ import cookieParser from "cookie-parser";
 
 import router from "./router";
 import { config, configCORS, connectDB } from "./config";
-// import { jsonToBits } from "./util.ts/helpers";
 
 const app = express();
 
@@ -15,7 +14,7 @@ app.use(cookieParser());
 
 connectDB();
 
-// console.log(jsonToBits({ age: "2", name: "divine" }));
+// console.log(toSizeUnit(1024 * 1024 * 5, "MB"));
 
 app.listen(config.port, "0.0.0.0", () => {
   router(app);

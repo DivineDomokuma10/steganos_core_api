@@ -1,7 +1,9 @@
 import cors from "cors";
 import dotenv from "dotenv";
+import multer from "multer";
 import mongoose from "mongoose";
-import { ALLOWED_ORIGINS } from "../util.ts/constants";
+
+import { ALLOWED_ORIGINS, IMAGE_MAX_SIZE } from "../util.ts/constants";
 
 dotenv.config();
 
@@ -42,3 +44,20 @@ export const configCORS = () =>
       }
     },
   });
+
+export const upload = multer({
+  storage: multer.memoryStorage(),
+
+  limits: {
+    fieldSize: 20 * 1024 * 1024,
+    fileSize: IMAGE_MAX_SIZE * 1024 * 1024,
+  },
+
+  fileFilter: (_req, file, cb) => {
+    if (file.mimetype === "image/png") {
+      cb(null, true);
+    } else {
+      cb(new Error("Only PNG images allowed"));
+    }
+  },
+});

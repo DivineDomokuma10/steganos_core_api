@@ -1,10 +1,9 @@
-import { PNG } from "pngjs";
 import { Request, Response } from "express";
 
 import encodeLSB from "../../services/steg/encode-steg";
 
 import { apiResponse } from "../../util.ts";
-import { MAX_SIZE } from "../../util.ts/constants";
+import { IMAGE_MAX_SIZE } from "../../util.ts/constants";
 import { jsonToBits, toSizeUnit } from "../../util.ts/helpers";
 
 const encodeController = async (req: Request, res: Response) => {
@@ -29,7 +28,7 @@ const encodeController = async (req: Request, res: Response) => {
       return;
     }
 
-    if (toSizeUnit(image.size, "MB") > MAX_SIZE) {
+    if (toSizeUnit(image.size, "MB") > IMAGE_MAX_SIZE) {
       apiResponse(res, 400, {
         status: "error",
         message: "Image size too large. Max size 10MB",
