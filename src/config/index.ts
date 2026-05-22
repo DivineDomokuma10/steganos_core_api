@@ -1,9 +1,13 @@
 import cors from "cors";
-import dotenv from "dotenv";
 import multer from "multer";
+import dotenv from "dotenv";
 import mongoose from "mongoose";
 
-import { ALLOWED_ORIGINS, IMAGE_MAX_SIZE } from "../util.ts/constants";
+import {
+  IMAGE_MAX_SIZE,
+  DEV_ALLOWED_ORIGINS,
+  PROD_ALLOWED_ORIGINS,
+} from "../util.ts/constants";
 
 dotenv.config();
 
@@ -11,9 +15,9 @@ export const config = {
   nodeEnv: process.env.NODE_ENV!,
   mongoUri: process.env.MONGO_URI!,
   saltRound: process.env.SALTROUNDS!,
-  port: process.env.PORT! as unknown as number,
   accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET!,
+  port: (process.env.PORT! as unknown as number) || 5000,
   accessTokenExpire: process.env.ACCESS_TOKEN_EXPIRE_TIME!,
   refreshTokenExpire: process.env.REFRESH_TOKEN_EXPIRE_TIME!,
 };
@@ -34,8 +38,8 @@ export const configCORS = () =>
     origin: (origin, callback) => {
       const allowed =
         config.nodeEnv === "production"
-          ? ["https://your-frontend.com"]
-          : ALLOWED_ORIGINS;
+          ? PROD_ALLOWED_ORIGINS
+          : DEV_ALLOWED_ORIGINS;
 
       if (!origin || allowed.includes(origin)) {
         callback(null, true);

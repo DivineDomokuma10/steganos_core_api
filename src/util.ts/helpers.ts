@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { Prettify, TDataSizeUnit } from "../types/type";
+import { Prettify, TBits, TDataSizeUnit } from "../types/type";
 
 export function extractor<T, K extends keyof T>(
   object: T,
@@ -55,21 +55,49 @@ export function bufferToBits(buffer: Buffer): number[] {
 export function jsonToBits(jsonObject: Record<string, string>) {
   const jsonStr = JSON.stringify(jsonObject);
 
-  return bufferToBits(Buffer.from(jsonStr, "utf-8"));
+  const jsonStrBuffer = Buffer.from(jsonStr, "utf-8");
+
+  return bufferToBits(jsonStrBuffer);
 }
 
-export function numberTo32Bits(num: number): number[] {
+export function numberToBits(num: number, numOfBits: TBits): number[] {
   const bits: number[] = [];
 
-  for (let i = 31; i >= 0; i--) {
+  for (let i = numOfBits - 1; i >= 0; i--) {
     bits.push((num >> i) & 1);
   }
 
   return bits;
 }
 
+export const bitsToNumber = (bits: number[], numOfBits: TBits): number => {
+  let num = 0;
+
+  for (let i = 0; i < numOfBits; i++) {
+    num = (num << 1) | bits[i];
+  }
+
+  return num;
+};
+
 export function getCapacityBits(dataLength: number) {
   const pixels = Math.floor(dataLength / 4);
 
   return pixels * 3;
 }
+
+export const bitsToByte = (bits: number[]) => {
+  const bytes: number[] = [];
+
+  for (let i = 0; i < bits.length; i += 8) {
+    let byte = 0;
+
+    for (let j = 0; j < 8; j++) {
+      byte = (byte << 1) | (bits[i + j] ?? 0);
+    }
+
+    bytes.push(byte);
+  }
+
+  return bytes;
+};

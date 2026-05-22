@@ -6,6 +6,6 @@ import decodeController from "../controllers/steg/decode";
 const router = Router();
 
 router.post("/encode", encodeController);
-router.get("/decode", decodeController);
+router.post("/decode", decodeController);
 
 export default router;

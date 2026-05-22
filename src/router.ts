@@ -8,6 +8,12 @@ import { upload } from "./config";
 import { authenticateToken } from "./middlewares/auth.middleware";
 
 export default (app: Express): void => {
+  app.get("/health", (_, res) => {
+    res
+      .status(200)
+      .json({ status: "success", message: "Steganos Core API Running" });
+  });
+
   app.use("/api/auth", authRoute);
 
   app.use(authenticateToken);
