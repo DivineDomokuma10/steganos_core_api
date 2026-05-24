@@ -93,10 +93,7 @@ const loginController = async (req: Request, res: Response) => {
   } catch (error) {
     const err = error as Error;
 
-    res.status(500).send({
-      error: err.name,
-      message: err.message,
-    });
+    apiResponse(res, 500, { status: "error", message: err.message });
 
     return;
   }
