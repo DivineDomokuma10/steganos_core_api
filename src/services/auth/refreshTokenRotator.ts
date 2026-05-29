@@ -63,5 +63,5 @@ export async function refreshTokenRotator(oldToken: string) {
     expiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL),
   });
 
-  return { accessToken, refreshToken, userId };
+  return { accessToken, refreshToken };
 }

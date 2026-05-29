@@ -14,10 +14,6 @@ import { apiResponse, compare, hasher } from "../../util.ts";
 
 const loginController = async (req: Request, res: Response) => {
   try {
-    console.log(`Endpoint: ${req.path}`);
-    console.log(`Payload: ${JSON.stringify(req.body)}`);
-    console.log(`Client: ${req.headers.origin}`);
-
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -41,7 +37,7 @@ const loginController = async (req: Request, res: Response) => {
     const isPwdCorrect = await compare(password, user.password);
 
     if (!isPwdCorrect) {
-      apiResponse(res, 401, {
+      apiResponse(res, 400, {
         status: "error",
         message: "Invalid Credentials",
       });

@@ -25,27 +25,14 @@ const refreshController = async (req: Request, res: Response) => {
       return;
     }
 
-    const { accessToken, refreshToken, userId } =
+    const { accessToken, refreshToken } =
       await refreshTokenRotator(incomingToken);
 
     setCookie(res, "refreshToken", refreshToken, REFRESH_TOKEN_TTL);
 
-    const user = await UserModel.findById(userId);
-
-    if (!user) {
-      apiResponse(res, 404, {
-        status: "error",
-        message: "USER_NOT_FOUND",
-      });
-
-      return;
-    }
-
-    const { email, username } = user;
-
     apiResponse(res, 200, {
       status: "success",
-      data: { accessToken, userId, username, email },
+      data: { accessToken },
       message: "REFRESH_SUCCESS",
     });
     return;

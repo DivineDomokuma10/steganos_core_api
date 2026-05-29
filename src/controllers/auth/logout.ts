@@ -1,11 +1,16 @@
 import { Request, Response } from "express";
 
 import { apiResponse } from "../../util.ts";
-import { clearCookie } from "../../services/auth/cookie.js";
+import { clearCookie } from "../../services/auth/cookie";
 
-const logoutController = async (req: Request, res: Response) => {
+const logoutController = async (_req: Request, res: Response) => {
   try {
     clearCookie(res, "refreshToken");
+    apiResponse(res, 500, {
+      data: null,
+      status: "success",
+      message: "Logout Successful",
+    });
   } catch (error) {
     const err = error as Error;
 
