@@ -10,9 +10,7 @@
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-
-    "types": ["node"]
+    "skipLibCheck": true
   },
   "include": ["src", "src/types/**/*"],
   "exclude": ["node_modules", "dist"]
