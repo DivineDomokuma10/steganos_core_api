@@ -3,7 +3,7 @@
     "target": "es2023",
     "module": "commonjs",
     "lib": ["ES2023", "DOM"],
-    "moduleResolution": "nodenext",
+    "moduleResolution": "node",
     "rootDir": "./src",
     "outDir": "./dist",
     "esModuleInterop": true,
