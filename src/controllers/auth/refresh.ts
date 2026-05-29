@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 
-import { apiResponse } from "../../util.ts";
-import { REFRESH_TOKEN_TTL } from "../../util.ts/constants";
+import { apiResponse } from "../../util/";
+import { REFRESH_TOKEN_TTL } from "../../util/constants";
 
-import UserModel from "../../model/user.model";
 import { setCookie } from "../../services/auth/cookie";
 import { refreshTokenRotator } from "../../services/auth/refreshTokenRotator";
 

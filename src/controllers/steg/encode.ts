@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 
 import encodeLSB from "../../services/steg/encode-steg";
 
-import { apiResponse } from "../../util.ts";
-import { IMAGE_MAX_SIZE } from "../../util.ts/constants";
-import { jsonToBits, toSizeUnit } from "../../util.ts/helpers";
+import { apiResponse } from "../../util";
+import { IMAGE_MAX_SIZE } from "../../util/constants";
+import { jsonToBits, toSizeUnit } from "../../util/helpers";
 
 const encodeController = async (req: Request, res: Response) => {
   try {

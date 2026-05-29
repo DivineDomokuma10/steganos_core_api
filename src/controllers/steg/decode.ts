@@ -1,7 +1,9 @@
 import { Request, Response } from "express";
-import { apiResponse } from "../../util.ts";
-import { toSizeUnit } from "../../util.ts/helpers";
-import { IMAGE_MAX_SIZE } from "../../util.ts/constants";
+
+import { apiResponse } from "../../util/";
+import { toSizeUnit } from "../../util/helpers";
+import { IMAGE_MAX_SIZE } from "../../util/constants";
+
 import decodeLSB from "../../services/steg/decode-steg";
 
 const decodeController = async (req: Request, res: Response) => {

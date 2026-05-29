@@ -1,5 +1,5 @@
 import { PNG } from "pngjs";
-import { getCapacityBits, numberToBits } from "../../util.ts/helpers";
+import { getCapacityBits, numberToBits } from "../../util/helpers";
 
 const encodeLSB = async (
   imageBuffer: Buffer,

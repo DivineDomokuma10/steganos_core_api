@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { apiResponse } from "../../util.ts";
+import { apiResponse } from "../../util/";
 import { clearCookie } from "../../services/auth/cookie";
 
 const logoutController = async (_req: Request, res: Response) => {

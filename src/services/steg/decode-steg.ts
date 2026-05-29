@@ -1,6 +1,6 @@
 import { PNG } from "pngjs";
 import { TDecodedPayload } from "../../types/type";
-import { bitsToByte, bitsToNumber } from "../../util.ts/helpers";
+import { bitsToByte, bitsToNumber } from "../../util/helpers";
 
 const decodeLSB = async (stegImageBuffer: Buffer): Promise<TDecodedPayload> => {
   // Decode PNG

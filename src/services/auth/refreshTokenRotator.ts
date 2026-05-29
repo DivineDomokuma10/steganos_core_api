@@ -3,9 +3,9 @@ import { IRefreshJwtPayload } from "../../types/interface";
 import { createToken, verifyJwt } from "./verify-create-jwt";
 import RefreshTokenModel from "../../model/refresh-token.model";
 
-import { uuid } from "../../util.ts/helpers";
-import { compare, hasher } from "../../util.ts";
-import { REFRESH_TOKEN_TTL } from "../../util.ts/constants";
+import { uuid } from "../../util/helpers";
+import { compare, hasher } from "../../util";
+import { REFRESH_TOKEN_TTL } from "../../util/constants";
 
 export async function refreshTokenRotator(oldToken: string) {
   const decoded = verifyJwt<IRefreshJwtPayload>(

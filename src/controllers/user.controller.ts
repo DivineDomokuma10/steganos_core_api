@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
+
+import { apiResponse } from "../util/";
 import UserModel from "../model/user.model";
-import { apiResponse } from "../util.ts";
-import { extractor } from "../util.ts/helpers";
+import { extractor } from "../util/helpers";
 
 export const getProfile = async (req: Request, res: Response) => {
   console.log("---------------------");

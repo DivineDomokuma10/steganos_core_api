@@ -8,9 +8,9 @@ import RefreshTokenModel from "../../model/refresh-token.model";
 
 import { IRefreshJwtPayload } from "../../types/interface";
 
-import { uuid } from "../../util.ts/helpers";
-import { REFRESH_TOKEN_TTL } from "../../util.ts/constants";
-import { apiResponse, compare, hasher } from "../../util.ts";
+import { uuid } from "../../util/helpers";
+import { REFRESH_TOKEN_TTL } from "../../util/constants";
+import { apiResponse, compare, hasher } from "../../util";
 
 const loginController = async (req: Request, res: Response) => {
   try {
