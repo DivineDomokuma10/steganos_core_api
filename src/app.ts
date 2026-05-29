@@ -4,6 +4,15 @@ import cookieParser from "cookie-parser";
 
 import router from "./router";
 import { configCORS } from "./config";
+import { IJwtPayload } from "./types/interface";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: IJwtPayload;
+    }
+  }
+}
 
 const app = express();
 
