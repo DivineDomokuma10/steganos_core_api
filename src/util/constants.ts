@@ -2,7 +2,7 @@ export const IMAGE_MAX_SIZE = 10;
 
 export const DEV_ALLOWED_ORIGINS = [
   "http://localhost:3000",
-  "http://192.168.143.150:3000",
+  "http://localhost:3001",
 ];
 export const PROD_ALLOWED_ORIGINS = [
   "https://steganos-core-client.onrender.com",
