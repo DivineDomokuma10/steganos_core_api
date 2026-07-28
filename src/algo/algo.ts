@@ -25,7 +25,6 @@ export function staircase(n: number): void {
     }
   }
 
-  console.log(placeholder);
 }
 
 export function miniMaxSum(arr: number[]): void {
@@ -41,7 +40,6 @@ export function miniMaxSum(arr: number[]): void {
     0,
   );
 
-  console.log(miniSum, maxSum);
 }
 
 export function birthdayCakeCandles(candles: number[]): number {

@@ -28,7 +28,7 @@ export function connectDB() {
       retryWrites: true,
       w: "majority",
     })
-    .then(() => console.log("✅ MongoDB connected successfully"))
+    .then(() => {})
     .catch((err) => console.error("❌ MongoDB connection error:", err));
 }
 

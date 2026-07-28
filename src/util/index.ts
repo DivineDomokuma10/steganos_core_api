@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
-import { Response } from "express";
-import { TApiResponse } from "../types/type";
+import { NextFunction, Response, Request } from "express";
+import { TApiResponse, THandlerFn } from "../types/type";
 
 export async function hasher(pwd: string): Promise<string> {
   const salt = await bcrypt.genSalt(10);
@@ -17,4 +17,10 @@ export function apiResponse<T>(
   payload: TApiResponse<T>,
 ) {
   return res.status(statusCode).json(payload);
+}
+
+export function asyncHandler(fn: THandlerFn) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
 }

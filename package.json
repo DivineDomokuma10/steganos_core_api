@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
-    "build": "rm -rf dist && tsc",
+    "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc",
     "start": "node dist/server.js"
   },
   "type": "commonjs",
@@ -12,6 +12,9 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "pnpm": {
+    "onlyBuiltDependencies": ["bcrypt", "esbuild"]
+  },
   "dependencies": {
     "bcrypt": "^6.0.0",
     "compression": "^1.8.1",
@@ -39,8 +42,7 @@
     "@types/node": "^25.9.1",
     "@types/pngjs": "^6.0.5",
     "nodemon": "^3.1.14",
-    "ts-node": "^10.9.2",
-    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.19.0",
     "typescript": "^5.8.3"
   }
 }
