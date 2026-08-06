@@ -41,6 +41,7 @@ export async function refreshTokenRotator(oldToken: string) {
   );
 
   if (!updated) {
+    await RefreshTokenModel.updateMany({ userId }, { revoked: true });
     throw new Error("TOKEN_ALREADY_USED");
   }
 

@@ -11,25 +11,41 @@ import {
 
 dotenv.config();
 
+const requiredEnvVars = [
+  "NODE_ENV",
+  "MONGO_URI",
+  "ACCESS_TOKEN_SECRET",
+  "REFRESH_TOKEN_SECRET",
+  "ACCESS_TOKEN_EXPIRE_TIME",
+  "REFRESH_TOKEN_EXPIRE_TIME",
+] as const;
+
+const missingVars = requiredEnvVars.filter(
+  (key) => !process.env[key] || process.env[key]!.trim() === "",
+);
+
+if (missingVars.length > 0) {
+  throw new Error(
+    `Missing required environment variables: ${missingVars.join(", ")}`,
+  );
+}
+
 export const config = {
   nodeEnv: process.env.NODE_ENV!,
   mongoUri: process.env.MONGO_URI!,
-  saltRound: process.env.SALTROUNDS!,
+  saltRound: process.env.SALTROUNDS ?? "10",
   accessTokenSecret: process.env.ACCESS_TOKEN_SECRET!,
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET!,
-  port: (process.env.PORT! as unknown as number) || 5000,
+  port: Number(process.env.PORT) || 5000,
   accessTokenExpire: process.env.ACCESS_TOKEN_EXPIRE_TIME!,
   refreshTokenExpire: process.env.REFRESH_TOKEN_EXPIRE_TIME!,
 };
 
 export function connectDB() {
-  mongoose
-    .connect(config.mongoUri, {
-      retryWrites: true,
-      w: "majority",
-    })
-    .then(() => {})
-    .catch((err) => console.error("❌ MongoDB connection error:", err));
+  return mongoose.connect(config.mongoUri, {
+    retryWrites: true,
+    w: "majority",
+  });
 }
 
 export const configCORS = () =>
