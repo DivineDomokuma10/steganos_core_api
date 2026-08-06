@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 
-import { apiResponse } from "../../util/";
-import { REFRESH_TOKEN_TTL } from "../../util/constants";
+import { apiResponse } from "@/util/";
+import { REFRESH_TOKEN_TTL } from "@/util/constants";
 
-import { setCookie } from "../../services/auth/cookie";
-import { refreshTokenRotator } from "../../services/auth/refreshTokenRotator";
+import { setCookie } from "@/services/auth/cookie";
+import { refreshTokenRotator } from "@/services/auth/refreshTokenRotator";
 
 const refreshController = async (req: Request, res: Response) => {
   try {

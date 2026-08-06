@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 
-import { config } from "../config";
-import { apiResponse } from "../util";
-import { IJwtPayload } from "../types/interface";
-import { verifyJwt } from "../services/auth/verify-create-jwt";
+import { config } from "@/config";
+import { apiResponse } from "@/util";
+import { IJwtPayload } from "@/types/interface";
+import { verifyJwt } from "@/services/auth/verify-create-jwt";
 
 export function authenticateToken(
   req: Request,

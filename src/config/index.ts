@@ -7,7 +7,7 @@ import {
   IMAGE_MAX_SIZE,
   DEV_ALLOWED_ORIGINS,
   PROD_ALLOWED_ORIGINS,
-} from "../util/constants";
+} from "@/util/constants";
 
 dotenv.config();
 

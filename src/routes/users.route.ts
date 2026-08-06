@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import { asyncHandler } from "../util";
-import { getProfile } from "../controllers/user.controller";
+import { asyncHandler } from "@/util";
+import { getProfile } from "@/controllers/user.controller";
 
 const router = Router();
 

@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
 
-import { IDbRefreshToken } from "../types/interface";
+import { IDbRefreshToken } from "@/types/interface";
 
 const refreshTokenSchema = new Schema<IDbRefreshToken>(
   {

@@ -1,9 +1,9 @@
 import jwt from "jsonwebtoken";
 import type { StringValue } from "ms";
 
-import { config } from "../../config";
-import { TTokenType } from "../../types/auth";
-import { ICreateTokenReturns, IJwtPayload } from "../../types/interface";
+import { config } from "@/config";
+import { TTokenType } from "@/types/auth";
+import { ICreateTokenReturns, IJwtPayload } from "@/types/interface";
 
 export function verifyJwt<T>(token: string, secret: string): T {
   try {

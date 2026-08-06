@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { Prettify, TBits, TDataSizeUnit } from "../types/type";
+import { Prettify, TBits, TDataSizeUnit } from "@/types/type";
 
 export function extractor<T, K extends keyof T>(
   object: T,

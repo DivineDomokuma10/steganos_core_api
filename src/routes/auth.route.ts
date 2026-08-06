@@ -1,10 +1,10 @@
 import { Router } from "express";
 
-import { asyncHandler } from "../util";
-import loginController from "../controllers/auth/login";
-import logoutController from "../controllers/auth/logout";
-import refreshController from "../controllers/auth/refresh";
-import registerController from "../controllers/auth/register";
+import { asyncHandler } from "@/util";
+import loginController from "@/controllers/auth/login";
+import logoutController from "@/controllers/auth/logout";
+import refreshController from "@/controllers/auth/refresh";
+import registerController from "@/controllers/auth/register";
 
 const router = Router();
 

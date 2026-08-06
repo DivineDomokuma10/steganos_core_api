@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { config } from "../../config";
+import { config } from "@/config";
 
 export function setCookie(
   res: Response,

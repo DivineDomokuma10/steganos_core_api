@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
-import UserModel from "../../model/user.model";
-import { apiResponse, hasher } from "../../util";
+import UserModel from "@/model/user.model";
+import { apiResponse, hasher } from "@/util";
 
 const registerController = async (req: Request, res: Response) => {
   const { email, password, username, termsAndCondition } = req.body;

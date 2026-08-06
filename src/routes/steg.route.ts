@@ -1,8 +1,8 @@
 import { Router } from "express";
 
-import { asyncHandler } from "../util";
-import encodeController from "../controllers/steg/encode";
-import decodeController from "../controllers/steg/decode";
+import { asyncHandler } from "@/util";
+import encodeController from "@/controllers/steg/encode";
+import decodeController from "@/controllers/steg/decode";
 
 const router = Router();
 

@@ -1,14 +1,14 @@
 import bcrypt from "bcrypt";
 import { NextFunction, Response, Request } from "express";
-import { TApiResponse, THandlerFn } from "../types/type";
+import { TApiResponse, THandlerFn } from "@/types/type";
 
-export async function hasher(pwd: string): Promise<string> {
+export async function hasher(val: string): Promise<string> {
   const salt = await bcrypt.genSalt(10);
-  return await bcrypt.hash(pwd, salt);
+  return await bcrypt.hash(val, salt);
 }
 
-export async function compare(pwd: string, hash: string): Promise<boolean> {
-  return await bcrypt.compare(pwd, hash);
+export async function compare(val: string, hash: string): Promise<boolean> {
+  return await bcrypt.compare(val, hash);
 }
 
 export function apiResponse<T>(
