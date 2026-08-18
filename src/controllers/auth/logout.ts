@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
 import { apiResponse } from "@/util";
-import { config } from "@/config";
+import { config } from "@/config/";
 import { clearCookie } from "@/services/auth/cookie";
 import { IRefreshJwtPayload } from "@/types/interface";
 import RefreshTokenModel from "@/model/refresh-token.model";

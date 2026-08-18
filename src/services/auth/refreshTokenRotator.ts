@@ -1,4 +1,4 @@
-import { config } from "@/config";
+import { config } from "@/config/";
 import { IRefreshJwtPayload } from "@/types/interface";
 import { createToken, verifyJwt } from "@/services/auth/verify-create-jwt";
 import RefreshTokenModel from "@/model/refresh-token.model";

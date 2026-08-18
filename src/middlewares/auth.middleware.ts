@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-import { config } from "@/config";
+import { config } from "@/config/";
 import { apiResponse } from "@/util";
 import { IJwtPayload } from "@/types/interface";
 import { verifyJwt } from "@/services/auth/verify-create-jwt";
