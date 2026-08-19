@@ -7,7 +7,6 @@ const userSchema = new Schema<IUser>(
     username: { type: String, required: true },
     password: { type: String, require, required: true },
     email: { type: String, unique: true, required: true },
-    termsAndCondition: { type: Boolean, required: true },
   },
   { timestamps: true },
 );

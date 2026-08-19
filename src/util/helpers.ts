@@ -1,5 +1,8 @@
+import { PNG } from "pngjs";
 import { randomUUID } from "node:crypto";
-import { Prettify, TBits, TDataSizeUnit } from "@/types/type";
+
+import { AppError } from "@/util/errors";
+import { Prettify, TBits, TDataSizeUnit, TDecodedPayload } from "@/types/type";
 
 export function extractor<T, K extends keyof T>(
   object: T,
@@ -23,6 +26,24 @@ export function uuid() {
 }
 
 export const toSafeBuffer = (data: Uint8Array) => Uint8Array.from(data);
+
+export function readPng(imageBuffer: Buffer) {
+  try {
+    return PNG.sync.read(imageBuffer);
+  } catch {
+    throw new AppError(400, "Invalid or corrupted PNG image");
+  }
+}
+
+export function isValidPayloadJson(payloadJson: unknown): boolean {
+  return (
+    typeof payloadJson === "object" &&
+    payloadJson !== null &&
+    typeof (payloadJson as TDecodedPayload).iv === "string" &&
+    typeof (payloadJson as TDecodedPayload).salt === "string" &&
+    typeof (payloadJson as TDecodedPayload).ciphertext === "string"
+  );
+}
 
 export function toSizeUnit(sizeInByte: number, unit: TDataSizeUnit): number {
   switch (unit) {

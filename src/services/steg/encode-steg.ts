@@ -1,12 +1,13 @@
 import { PNG } from "pngjs";
-import { getCapacityBits, numberToBits } from "@/util/helpers";
+import { AppError } from "@/util/errors";
+import { getCapacityBits, numberToBits, readPng } from "@/util/helpers";
 
 const encodeLSB = async (
   imageBuffer: Buffer,
   payloadBits: number[],
 ): Promise<Buffer> => {
   // Decode PNG
-  const png = PNG.sync.read(imageBuffer);
+  const png = readPng(imageBuffer);
 
   // Flattened RGBA pixel buffer
   const data = png.data;
@@ -21,7 +22,7 @@ const encodeLSB = async (
   const capacityBits = getCapacityBits(data.length);
 
   if (fullPayloadBits.length > capacityBits) {
-    throw new Error("Image too small for payload");
+    throw new AppError(400, "Image too small to hold payload");
   }
 
   let bitIndex = 0;

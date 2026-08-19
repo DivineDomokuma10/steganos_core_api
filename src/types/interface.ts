@@ -2,7 +2,6 @@ export interface IUser {
   email: string;
   username: string;
   password: string;
-  termsAndCondition: boolean;
 }
 
 export interface ICreateTokenReturns {

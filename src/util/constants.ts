@@ -1,5 +1,7 @@
 export const IMAGE_MAX_SIZE = 10;
 
+export const MESSAGE_MAX_LENGTH = 512 * 1024;
+
 export const DEV_ALLOWED_ORIGINS = [
   "http://localhost:3000",
   "http://localhost:3001",

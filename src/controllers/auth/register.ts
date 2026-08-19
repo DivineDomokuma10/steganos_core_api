@@ -4,9 +4,9 @@ import UserModel from "@/model/user.model";
 import { apiResponse, hasher } from "@/util";
 
 const registerController = async (req: Request, res: Response) => {
-  const { email, password, username, termsAndCondition } = req.body;
+  const { email, password, username } = req.body;
 
-  if (!email || !password || !username || !termsAndCondition) {
+  if (!email || !password || !username) {
     apiResponse(res, 400, {
       status: "error",
       message: "All fields are required",
@@ -31,7 +31,6 @@ const registerController = async (req: Request, res: Response) => {
   await UserModel.create({
     email,
     username,
-    termsAndCondition,
     password: hashedPwd,
   });
 

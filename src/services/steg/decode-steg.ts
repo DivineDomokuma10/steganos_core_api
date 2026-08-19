@@ -1,10 +1,15 @@
-import { PNG } from "pngjs";
+import {
+  readPng,
+  bitsToByte,
+  bitsToNumber,
+  isValidPayloadJson,
+} from "@/util/helpers";
+import { AppError } from "@/util/errors";
 import { TDecodedPayload } from "@/types/type";
-import { bitsToByte, bitsToNumber } from "@/util/helpers";
 
 const decodeLSB = async (stegImageBuffer: Buffer): Promise<TDecodedPayload> => {
   // Decode PNG
-  const png = PNG.sync.read(stegImageBuffer);
+  const png = readPng(stegImageBuffer);
 
   // Flattened RGBA buffer
   const data = png.data;
@@ -21,11 +26,26 @@ const decodeLSB = async (stegImageBuffer: Buffer): Promise<TDecodedPayload> => {
     extractedBits.push(data[i] & 1);
   }
 
+  // Not enough bits to even hold a 32-bit header
+  if (extractedBits.length < 40) {
+    throw new AppError(400, "No steganographic payload found");
+  }
+
   // First 32 bits = payload length
   const headerBits = extractedBits.slice(0, 32);
 
   // Convert header bits back to number
-  let payloadLength = bitsToNumber(headerBits, 32);
+  const payloadLength = bitsToNumber(headerBits, 32);
+
+  // Payload is always byte-aligned; a bogus header should be rejected
+  if (payloadLength <= 0 || payloadLength % 8 !== 0) {
+    throw new AppError(400, "No steganographic payload found");
+  }
+
+  // Header must not declare more bits than the image actually holds
+  if (32 + payloadLength > extractedBits.length) {
+    throw new AppError(400, "Corrupted steganographic payload");
+  }
 
   // Extract actual payload bits
   const payloadBits = extractedBits.slice(32, 32 + payloadLength);
@@ -38,9 +58,21 @@ const decodeLSB = async (stegImageBuffer: Buffer): Promise<TDecodedPayload> => {
 
   const payloadStr = payloadBuffer.toString();
 
-  const payloadJson = JSON.parse(payloadStr) as TDecodedPayload;
+  let payloadJson: unknown;
 
-  return payloadJson;
+  try {
+    payloadJson = JSON.parse(payloadStr);
+  } catch {
+    throw new AppError(400, "No valid steganographic payload found");
+  }
+
+  const isValidPayload = isValidPayloadJson(payloadJson);
+
+  if (!isValidPayload) {
+    throw new AppError(400, "No valid steganographic payload found");
+  }
+
+  return payloadJson as TDecodedPayload;
 };
 
 export default decodeLSB;

@@ -18,11 +18,13 @@ A secure Node.js and TypeScript REST API for user authentication and image stega
 
 ### Steganography System
 
-* Encode JSON payloads into PNG images
+* Encode encrypted JSON payloads (`iv`, `salt`, `ciphertext`) into PNG images
 * Decode hidden data from PNG images
 * LSB (Least Significant Bit) image steganography
 * PNG-only upload validation
 * Image size validation
+* Payload size and required-field validation
+* Corrupt/non-steganographic image handling
 * Memory-based file processing (no filesystem storage)
 
 ### Security Features
@@ -393,17 +395,20 @@ multipart/form-data
 
 ### Form Fields
 
-| Field          | Type      | Required |
-| -------------- | --------- | -------- |
-| image          | PNG File  | Yes      |
-| payload fields | JSON Data | Yes      |
+| Field      | Type     | Required |
+| ---------- | -------- | -------- |
+| image      | PNG File | Yes      |
+| iv         | string   | Yes      |
+| salt       | string   | Yes      |
+| ciphertext | string   | Yes      |
 
 ### Example
 
 ```json
 {
-  "message": "Hello World",
-  "sender": "John"
+  "iv": "base64_encoded_iv",
+  "salt": "base64_encoded_salt",
+  "ciphertext": "base64_encoded_ciphertext"
 }
 ```
 
@@ -444,8 +449,9 @@ multipart/form-data
   "status": "success",
   "message": "Steg-image decoded successfully",
   "data": {
-    "message": "Hello World",
-    "sender": "John"
+    "iv": "base64_encoded_iv",
+    "salt": "base64_encoded_salt",
+    "ciphertext": "base64_encoded_ciphertext"
   }
 }
 ```
@@ -474,12 +480,19 @@ Receive New Access Token
 
 # File Upload Restrictions
 
-| Rule           | Value  |
-| -------------- | ------ |
-| Allowed Format | PNG    |
-| Storage Type   | Memory |
-| Max Size       | 10 MB  |
-| Multiple Files | No     |
+| Rule             | Value  |
+| ---------------- | ------ |
+| Allowed Format   | PNG    |
+| Storage Type     | Memory |
+| Max Size         | 10 MB  |
+| Multiple Files   | No     |
+| Max Payload Size | 512 KB |
+
+### Payload Constraints
+
+* The payload is a structured JSON object containing `iv`, `salt`, and `ciphertext` (base64 strings produced by client-side AES-GCM encryption).
+* The serialized payload must not exceed 512 KB.
+* The encoded output image is also capped at 10 MB so that encoded images remain decodable.
 
 ---
 
@@ -527,6 +540,78 @@ Receive New Access Token
 {
   "status": "error",
   "message": "Payload cannot be empty"
+}
+```
+
+### Invalid PNG
+
+```json
+{
+  "status": "error",
+  "message": "Invalid or corrupted PNG image"
+}
+```
+
+### Missing Payload Field
+
+```json
+{
+  "status": "error",
+  "message": "Missing or invalid payload field: iv"
+}
+```
+
+### Message Too Large
+
+```json
+{
+  "status": "error",
+  "message": "Message too large. Max message size is 512KB"
+}
+```
+
+### Image Too Small
+
+```json
+{
+  "status": "error",
+  "message": "Image too small to hold payload"
+}
+```
+
+### Encoded Image Too Large
+
+```json
+{
+  "status": "error",
+  "message": "Encoded image exceeds the 10MB size limit"
+}
+```
+
+### No Steganographic Payload
+
+```json
+{
+  "status": "error",
+  "message": "No steganographic payload found"
+}
+```
+
+### Corrupted Steganographic Payload
+
+```json
+{
+  "status": "error",
+  "message": "Corrupted steganographic payload"
+}
+```
+
+### Invalid Steganographic Payload
+
+```json
+{
+  "status": "error",
+  "message": "No valid steganographic payload found"
 }
 ```
 

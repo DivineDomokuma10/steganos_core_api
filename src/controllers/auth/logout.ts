@@ -23,6 +23,7 @@ const logoutController = async (req: Request, res: Response) => {
   }
 
   clearCookie(res, "refreshToken");
+
   apiResponse(res, 200, {
     data: null,
     status: "success",
